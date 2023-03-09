@@ -5,21 +5,32 @@
   "main": "serverless.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-	"local-invoke": "serverless invoke local --function hello  --path './src/functions/hello/mock.json'"
+    "local-invoke": "serverless invoke local --function hello  --path './src/functions/hello/mock.json'"
   },
   "engines": {
     "node": ">=14.15.0"
   },
   "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.287.0",
     "@middy/core": "^3.4.0",
-    "@middy/http-json-body-parser": "^3.4.0"
+    "@middy/http-json-body-parser": "^3.4.0",
+    "@types/aws-sdk": "^2.7.0",
+    "pg": "^8.10.0",
+    "pg-promise": "^11.3.0"
   },
   "devDependencies": {
     "@serverless/typescript": "^3.0.0",
     "@types/aws-lambda": "^8.10.71",
     "@types/node": "^14.14.25",
+    "@types/pg": "^8.6.6",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "aws-sdk": "^2.1331.0",
     "esbuild": "^0.14.11",
+    "eslint": "^8.0.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "json-schema-to-ts": "^1.5.0",
+    "prettier": "^2.3.2",
     "serverless": "^3.0.0",
     "serverless-esbuild": "^1.23.3",
     "ts-node": "^10.4.0",
