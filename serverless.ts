@@ -7,6 +7,9 @@ const serverlessConfiguration: AWS = {
   frameworkVersion: '3',
   plugins: ['serverless-esbuild'],
   provider: {
+	iam: {
+		role: 'arn:aws:iam::733043447271:role/lambda-vpc-role'
+	},
     name: 'aws',
     runtime: 'nodejs14.x',
 	region: "eu-west-2",
