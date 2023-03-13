@@ -15,14 +15,14 @@
     "@middy/core": "^3.4.0",
     "@middy/http-json-body-parser": "^3.4.0",
     "@types/aws-sdk": "^2.7.0",
-    "pg": "^8.10.0",
-    "pg-promise": "^11.3.0"
+    "sequelize": "^6.29.2",
+    "sequelize-typescript": "^2.1.5"
   },
   "devDependencies": {
     "@serverless/typescript": "^3.0.0",
     "@types/aws-lambda": "^8.10.71",
     "@types/node": "^14.14.25",
-    "@types/pg": "^8.6.6",
+    "@types/sequelize": "^4.28.14",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "aws-sdk": "^2.1331.0",
     "esbuild": "^0.14.11",
