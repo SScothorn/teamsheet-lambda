@@ -4,8 +4,9 @@ import { middyfy } from '@libs/lambda';
 
 import schema from './schema';
 import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
+import { getSequelizeInstance } from 'src/db/db';
 
-type DBSecret = {
+export type DBSecret = {
 	username: string;
 	password: string;
 	engine: string;
@@ -46,21 +47,24 @@ const hello: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) =
 
 	const { username, password, engine, host, port, dbInstanceIdentifier } = secret;
 
-	return formatJSONResponse({
-		message: `Hello ${event.body.name}!`,
-		event,
-	});
+	// const test = await getSequelizeInstance(secret);
+	// test.close();
 
 	// return formatJSONResponse({
-	// 	message: `Hello ${event.body.name}!
-	// 	username is: ${username}
-	// 	password is: ${password}
-	// 	engine is: ${engine}
-	// 	host is: ${host}
-	// 	port is: ${port}
-	// 	dbInstanceIdentifier is: ${dbInstanceIdentifier}`,
+	// 	message: `Hello ${event.body.name}!`,
 	// 	event,
 	// });
+
+	return formatJSONResponse({
+		message: `Hello ${event.body.name}!
+		username is: ${username}
+		password is: ${password}
+		engine is: ${engine}
+		host is: ${host}
+		port is: ${port}
+		dbInstanceIdentifier is: ${dbInstanceIdentifier}`,
+		event,
+	});
 };
 
 export const main = middyfy(hello);

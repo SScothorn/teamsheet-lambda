@@ -1,9 +1,20 @@
-import { Sequelize } from 'sequelize';
+import { DBSecret } from '@functions/hello/handler';
+import { Dialect, Sequelize } from 'sequelize';
 
-let sequelizeInstance = null;
+let sequelizeInstance: Sequelize = null;
 
-async function loadSequelize() {
-	const newSequelizeInstance = new Sequelize('mysql://root:asd123@localhost:3306/mydb', {
+async function loadSequelize(secret: DBSecret) {
+	const { username, password, engine, host, port, dbInstanceIdentifier } = secret;
+
+	const newSequelizeInstance = new Sequelize({
+		database: dbInstanceIdentifier,
+		username,
+		password,
+		host: host,
+		// host: 'teamsheet-db-proxy.proxy-c3txzw57ocdq.eu-west-2.rds.amazonaws.com',
+		port,
+		dialect: engine as Dialect,
+
 		pool: {
 			/*
 			 * Lambda functions process one request at a time but your code may issue multiple queries
@@ -42,8 +53,9 @@ async function loadSequelize() {
 	return newSequelizeInstance;
 }
 
-export function getSequelizeInstance() {
+export async function getSequelizeInstance(secret: DBSecret) {
 	if (!sequelizeInstance) {
-		sequelizeInstance = loadSequelize();
+		sequelizeInstance = await loadSequelize(secret);
 	}
+	return sequelizeInstance;
 }
