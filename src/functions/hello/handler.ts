@@ -48,7 +48,7 @@ const hello: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) =
 	const { username, password, engine, host, port, dbInstanceIdentifier } = secret;
 
 	// const test = await getSequelizeInstance(secret);
-	// test.close();
+	// test.connectionManager.close();
 
 	// return formatJSONResponse({
 	// 	message: `Hello ${event.body.name}!`,

@@ -1,24 +1,44 @@
 {
-  "extends": "./tsconfig.paths.json",
-  "compilerOptions": {
-    "lib": ["ESNext"],
-    "moduleResolution": "node",
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "removeComments": true,
-    "sourceMap": true,
-    "target": "ES2020",
-    "outDir": "lib"
-  },
-  "include": ["src/**/*.ts", "serverless.ts"],
-  "exclude": [
-    "node_modules/**/*",
-    ".serverless/**/*",
-    ".webpack/**/*",
-    "_warmup/**/*",
-    ".vscode/**/*"
-  ],
-  "ts-node": {
-    "require": ["tsconfig-paths/register"]
-  }
+	"extends": "@tsconfig/node16/tsconfig.json",
+	"compilerOptions": {
+		"lib": ["ESNext"],
+		"target": "ESNext",
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"removeComments": true,
+		"sourceMap": true,
+		"outDir": "lib"
+	},
+	"include": ["src/**/*.ts", "serverless.ts"],
+	"exclude": [
+		"node_modules/**/*",
+		".serverless/**/*",
+		".webpack/**/*",
+		"_warmup/**/*",
+		".vscode/**/*"
+	]
 }
+// {
+// 	"extends": "@tsconfig/node16/tsconfig.json",
+// 	"compilerOptions": {
+// 		"lib": ["ESNext"],
+// 		"moduleResolution": "node",
+// 		"noUnusedLocals": true,
+// 		"noUnusedParameters": true,
+// 		"removeComments": true,
+// 		"sourceMap": true,
+// 		"target": "ES2020",
+// 		"outDir": "lib"
+// 	},
+// 	"include": ["src/**/*.ts", "serverless.ts"],
+// 	"exclude": [
+// 		"node_modules/**/*",
+// 		".serverless/**/*",
+// 		".webpack/**/*",
+// 		"_warmup/**/*",
+// 		".vscode/**/*"
+// 	],
+// 	"ts-node": {
+// 		"require": ["tsconfig-paths/register"]
+// 	}
+// }

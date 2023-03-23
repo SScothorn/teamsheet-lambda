@@ -5,7 +5,7 @@ import hello from '@functions/hello';
 const serverlessConfiguration: AWS = {
 	service: 'teamsheet-lambda',
 	frameworkVersion: '3',
-	plugins: ['serverless-esbuild'],
+	plugins: ['serverless-plugin-typescript', 'serverless-esbuild', 'serverless-offline'],
 	provider: {
 		iam: {
 			role: 'arn:aws:iam::733043447271:role/lambda-vpc-role',

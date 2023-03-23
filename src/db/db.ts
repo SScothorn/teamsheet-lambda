@@ -56,6 +56,14 @@ async function loadSequelize(secret: DBSecret) {
 export async function getSequelizeInstance(secret: DBSecret) {
 	if (!sequelizeInstance) {
 		sequelizeInstance = await loadSequelize(secret);
+	} else {
+		// restart connection pool to ensure connections are not re-used across invocations
+		sequelizeInstance.connectionManager.initPools();
+
+		// restore `getConnection()` if it has been overwritten by `close()`
+		if (sequelizeInstance.connectionManager.hasOwnProperty('getConnection')) {
+			delete sequelizeInstance.connectionManager.getConnection;
+		}
 	}
 	return sequelizeInstance;
 }
