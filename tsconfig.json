@@ -1,5 +1,5 @@
 {
-	"extends": "@tsconfig/node16/tsconfig.json",
+	"extends": "./node_modules/@tsconfig/node16/tsconfig.json",
 	"compilerOptions": {
 		"lib": ["ESNext"],
 		"target": "ESNext",
@@ -7,7 +7,9 @@
 		"noUnusedParameters": true,
 		"removeComments": true,
 		"sourceMap": true,
-		"outDir": "lib"
+		"outDir": "lib",
+		"baseUrl": "src",
+		"paths": {}
 	},
 	"include": ["src/**/*.ts", "serverless.ts"],
 	"exclude": [
@@ -18,27 +20,3 @@
 		".vscode/**/*"
 	]
 }
-// {
-// 	"extends": "@tsconfig/node16/tsconfig.json",
-// 	"compilerOptions": {
-// 		"lib": ["ESNext"],
-// 		"moduleResolution": "node",
-// 		"noUnusedLocals": true,
-// 		"noUnusedParameters": true,
-// 		"removeComments": true,
-// 		"sourceMap": true,
-// 		"target": "ES2020",
-// 		"outDir": "lib"
-// 	},
-// 	"include": ["src/**/*.ts", "serverless.ts"],
-// 	"exclude": [
-// 		"node_modules/**/*",
-// 		".serverless/**/*",
-// 		".webpack/**/*",
-// 		"_warmup/**/*",
-// 		".vscode/**/*"
-// 	],
-// 	"ts-node": {
-// 		"require": ["tsconfig-paths/register"]
-// 	}
-// }

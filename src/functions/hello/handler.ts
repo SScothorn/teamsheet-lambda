@@ -1,10 +1,7 @@
-import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
-import { formatJSONResponse } from '@libs/api-gateway';
-import { middyfy } from '@libs/lambda';
-
+import { ValidatedEventAPIGatewayProxyEvent, formatJSONResponse } from '../../libs/api-gateway';
+import { middyfy } from '../../libs/lambda';
 import schema from './schema';
 import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
-import { getSequelizeInstance } from 'src/db/db';
 
 export type DBSecret = {
 	username: string;
@@ -37,7 +34,7 @@ async function getSecret(): Promise<DBSecret> {
 		throw error;
 	}
 
-	const secret: DBSecret = JSON.parse(response.SecretString);
+	const secret: DBSecret = JSON.parse(response.SecretString as string);
 
 	return secret;
 }

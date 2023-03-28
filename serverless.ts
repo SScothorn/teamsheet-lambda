@@ -1,17 +1,16 @@
+import hello from './src/functions/hello';
 import type { AWS } from '@serverless/typescript';
-
-import hello from '@functions/hello';
 
 const serverlessConfiguration: AWS = {
 	service: 'teamsheet-lambda',
 	frameworkVersion: '3',
-	plugins: ['serverless-plugin-typescript', 'serverless-esbuild', 'serverless-offline'],
+	plugins: ['serverless-plugin-typescript', 'serverless-tscpaths', 'serverless-esbuild', 'serverless-offline'],
 	provider: {
 		iam: {
 			role: 'arn:aws:iam::733043447271:role/lambda-vpc-role',
 		},
 		name: 'aws',
-		runtime: 'nodejs14.x',
+		runtime: 'nodejs16.x',
 		region: 'eu-west-2',
 		apiGateway: {
 			minimumCompressionSize: 1024,
@@ -23,20 +22,24 @@ const serverlessConfiguration: AWS = {
 		},
 	},
 	// import the function via paths
-	functions: { hello },
 	package: { individually: true },
 	custom: {
+		// tscpaths: { // Doesn't seem to work when paths are used in this file prior to them being defined
+		// 	libs: 'src/libs',
+		// 	functions: 'src/functions',
+		// },
 		esbuild: {
 			bundle: true,
 			minify: false,
 			sourcemap: true,
 			exclude: ['aws-sdk'],
-			target: 'node14',
+			target: 'node16',
 			define: { 'require.resolve': undefined },
 			platform: 'node',
 			concurrency: 10,
 		},
 	},
+	functions: { hello },
 };
 
 module.exports = serverlessConfiguration;

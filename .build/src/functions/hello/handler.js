@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.main = void 0;
-const api_gateway_1 = require("libs/api-gateway");
-const lambda_1 = require("libs/lambda");
+const api_gateway_1 = require("../../libs/api-gateway");
+const lambda_1 = require("../../libs/lambda");
 const client_secrets_manager_1 = require("@aws-sdk/client-secrets-manager");
 async function getSecret() {
     const secret_name = 'teamsheet/db';
