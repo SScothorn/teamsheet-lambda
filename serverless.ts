@@ -4,7 +4,7 @@ import type { AWS } from '@serverless/typescript';
 const serverlessConfiguration: AWS = {
 	service: 'teamsheet-lambda',
 	frameworkVersion: '3',
-	plugins: ['serverless-plugin-typescript', 'serverless-tscpaths', 'serverless-esbuild', 'serverless-offline'],
+	plugins: ['serverless-plugin-typescript', 'serverless-offline', 'serverless-tscpaths'],
 	provider: {
 		iam: {
 			role: 'arn:aws:iam::733043447271:role/lambda-vpc-role',
@@ -28,16 +28,16 @@ const serverlessConfiguration: AWS = {
 		// 	libs: 'src/libs',
 		// 	functions: 'src/functions',
 		// },
-		esbuild: {
-			bundle: true,
-			minify: false,
-			sourcemap: true,
-			exclude: ['aws-sdk'],
-			target: 'node16',
-			define: { 'require.resolve': undefined },
-			platform: 'node',
-			concurrency: 10,
-		},
+		// esbuild: {
+		// 	bundle: true,
+		// 	minify: false,
+		// 	sourcemap: true,
+		// 	exclude: ['aws-sdk'],
+		// 	target: 'node16',
+		// 	define: { 'require.resolve': undefined },
+		// 	platform: 'node',
+		// 	concurrency: 10,
+		// },
 	},
 	functions: { hello },
 };
