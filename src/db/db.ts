@@ -1,19 +1,82 @@
-import { DBSecret } from '@functions/hello/handler';
+import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
+import { Signer } from '@aws-sdk/rds-signer';
 import { Dialect, Sequelize } from 'sequelize';
 
-let sequelizeInstance: Sequelize = null;
+let sequelizeInstance: Sequelize;
 
-async function loadSequelize(secret: DBSecret) {
-	const { username, password, engine, host, port, dbInstanceIdentifier } = secret;
+export type DBSecret = {
+	username: string;
+	password: string;
+	engine: string;
+	host: string;
+	port: number;
+	dbInstanceIdentifier: string;
+};
+
+async function getToken(): Promise<string> {
+	const signer = new Signer({
+		hostname: 'teamsheet-db-proxy.proxy-c3txzw57ocdq.eu-west-2.rds.amazonaws.com',
+		port: 5432,
+		username: 'postgres',
+		region: 'eu-west-2',
+	});
+
+	const token = await signer.getAuthToken();
+
+	return token;
+}
+
+async function getSecret(): Promise<DBSecret> {
+	const secret_name = 'teamsheet/db';
+
+	const client = new SecretsManagerClient({
+		region: 'eu-west-2',
+	});
+
+	let response;
+
+	try {
+		response = await client.send(
+			new GetSecretValueCommand({
+				SecretId: secret_name,
+				VersionStage: 'AWSCURRENT', // VersionStage defaults to AWSCURRENT if unspecified
+			}),
+		);
+	} catch (error) {
+		// For a list of exceptions thrown, see
+		// https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+		throw error;
+	}
+
+	const secret: DBSecret = JSON.parse(response.SecretString as string);
+
+	return secret;
+}
+
+async function loadSequelize() {
+	const token = await getToken();
+	console.log(`Token: ${token}`);
+	// const { username, password, engine, host, port, dbInstanceIdentifier } = await getSecret();
+
+	// console.log(`
+	// 	username is: ${username}
+	// 	password is: ${password}
+	// 	engine is: ${engine}
+	// 	host is: ${host}
+	// 	port is: ${port}
+	// 	dbInstanceIdentifier is: ${dbInstanceIdentifier}`);
 
 	const newSequelizeInstance = new Sequelize({
-		database: dbInstanceIdentifier,
-		username,
-		password,
-		host: host,
-		// host: 'teamsheet-db-proxy.proxy-c3txzw57ocdq.eu-west-2.rds.amazonaws.com',
-		port,
-		dialect: engine as Dialect,
+		database: 'postgres',
+		username: 'postgres',
+		password: token,
+		// password: 'S#8M4!c&5zYs',
+		// host: host,
+		host: 'teamsheet-db-proxy.proxy-c3txzw57ocdq.eu-west-2.rds.amazonaws.com',
+		// host: 'teamsheet-db.c3txzw57ocdq.eu-west-2.rds.amazonaws.com',
+		port: 5432,
+		dialect: 'postgres',
+		// dialect: engine as Dialect,
 
 		pool: {
 			/*
@@ -44,18 +107,20 @@ async function loadSequelize(secret: DBSecret) {
 			 * Ensures the connection pool attempts to be cleaned up automatically on the next Lambda
 			 * function invocation, if the previous invocation timed out.
 			 */
-			evict: 300000,
+			evict: 30000,
 		},
 	});
 
 	await newSequelizeInstance.authenticate();
 
+	console.log('Got here');
+
 	return newSequelizeInstance;
 }
 
-export async function getSequelizeInstance(secret: DBSecret) {
+export async function getSequelizeInstance() {
 	if (!sequelizeInstance) {
-		sequelizeInstance = await loadSequelize(secret);
+		sequelizeInstance = await loadSequelize();
 	} else {
 		// restart connection pool to ensure connections are not re-used across invocations
 		sequelizeInstance.connectionManager.initPools();

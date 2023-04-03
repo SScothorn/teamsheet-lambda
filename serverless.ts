@@ -20,6 +20,10 @@ const serverlessConfiguration: AWS = {
 			AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
 			NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
 		},
+		vpc: {
+			securityGroupIds: ['sg-0136d60bde25c036c'],
+			subnetIds: ['subnet-0f6b436955df702d7', 'subnet-05696ab3b47b0f565'],
+		},
 	},
 	// import the function via paths
 	package: { individually: true },
