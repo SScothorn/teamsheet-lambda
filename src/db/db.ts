@@ -76,6 +76,12 @@ async function loadSequelize() {
 		// host: 'teamsheet-db.c3txzw57ocdq.eu-west-2.rds.amazonaws.com',
 		port: 5432,
 		dialect: 'postgres',
+		dialectOptions: {
+			ssl: {
+				require: true,
+				rejectUnauthorized: false,
+			},
+		},
 		// dialect: engine as Dialect,
 
 		pool: {
