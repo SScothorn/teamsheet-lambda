@@ -1,17 +1,9 @@
-import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
 import { Signer } from '@aws-sdk/rds-signer';
-import { Dialect, Sequelize } from 'sequelize';
+import { Options, Sequelize } from 'sequelize';
 
 let sequelizeInstance: Sequelize;
 
-export type DBSecret = {
-	username: string;
-	password: string;
-	engine: string;
-	host: string;
-	port: number;
-	dbInstanceIdentifier: string;
-};
+export type DBCredentials = Partial<Options>;
 
 async function getToken(): Promise<string> {
 	const signer = new Signer({
@@ -26,36 +18,35 @@ async function getToken(): Promise<string> {
 	return token;
 }
 
-async function getSecret(): Promise<DBSecret> {
-	const secret_name = 'teamsheet/db';
+async function getDBCredentials(): Promise<DBCredentials> {
+	console.log(`process.env.IS_OFFLINE: ${process.env.IS_OFFLINE}`);
+	if (process.env.IS_OFFLINE) {
+		return {
+			database: 'teamsheet',
+			username: 'postgres',
+			password: '',
+			host: 'localhost',
+		};
+	} else {
+		const token = await getToken();
+		return {
+			database: 'postgres',
+			username: 'postgres',
+			password: token,
+			host: 'teamsheet-db-proxy.proxy-c3txzw57ocdq.eu-west-2.rds.amazonaws.com',
 
-	const client = new SecretsManagerClient({
-		region: 'eu-west-2',
-	});
-
-	let response;
-
-	try {
-		response = await client.send(
-			new GetSecretValueCommand({
-				SecretId: secret_name,
-				VersionStage: 'AWSCURRENT', // VersionStage defaults to AWSCURRENT if unspecified
-			}),
-		);
-	} catch (error) {
-		// For a list of exceptions thrown, see
-		// https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
-		throw error;
+			dialectOptions: {
+				ssl: {
+					require: true,
+					rejectUnauthorized: false,
+				},
+			},
+		};
 	}
-
-	const secret: DBSecret = JSON.parse(response.SecretString as string);
-
-	return secret;
 }
 
 async function loadSequelize() {
-	const token = await getToken();
-	console.log(`Token: ${token}`);
+	const dbCredentials = await getDBCredentials();
 	// const { username, password, engine, host, port, dbInstanceIdentifier } = await getSecret();
 
 	// console.log(`
@@ -67,22 +58,16 @@ async function loadSequelize() {
 	// 	dbInstanceIdentifier is: ${dbInstanceIdentifier}`);
 
 	const newSequelizeInstance = new Sequelize({
-		database: 'postgres',
-		username: 'postgres',
-		password: token,
+		...dbCredentials,
+		// database: 'postgres',
+		// username: 'postgres',
+		// password: token,
 		// password: 'S#8M4!c&5zYs',
 		// host: host,
-		host: 'teamsheet-db-proxy.proxy-c3txzw57ocdq.eu-west-2.rds.amazonaws.com',
+		// host: 'teamsheet-db-proxy.proxy-c3txzw57ocdq.eu-west-2.rds.amazonaws.com',
 		// host: 'teamsheet-db.c3txzw57ocdq.eu-west-2.rds.amazonaws.com',
 		port: 5432,
 		dialect: 'postgres',
-		dialectOptions: {
-			ssl: {
-				require: true,
-				rejectUnauthorized: false,
-			},
-		},
-		// dialect: engine as Dialect,
 
 		pool: {
 			/*
