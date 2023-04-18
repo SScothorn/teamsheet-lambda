@@ -28,7 +28,6 @@ export class User extends Base<InferAttributes<User>, InferCreationAttributes<Us
 
 	static get modelOptions(): Partial<InitOptions> {
 		return {
-			// tableName: 'Users',
 			...super.modelOptions,
 		};
 	}
