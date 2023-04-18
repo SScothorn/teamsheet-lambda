@@ -1,5 +1,8 @@
 import { Signer } from '@aws-sdk/rds-signer';
+import path from 'path';
 import { Options, Sequelize } from 'sequelize';
+import fs from 'fs';
+import { User } from './models/user';
 
 let sequelizeInstance: Sequelize;
 
@@ -47,25 +50,11 @@ async function getDBCredentials(): Promise<DBCredentials> {
 
 async function loadSequelize() {
 	const dbCredentials = await getDBCredentials();
-	// const { username, password, engine, host, port, dbInstanceIdentifier } = await getSecret();
 
-	// console.log(`
-	// 	username is: ${username}
-	// 	password is: ${password}
-	// 	engine is: ${engine}
-	// 	host is: ${host}
-	// 	port is: ${port}
-	// 	dbInstanceIdentifier is: ${dbInstanceIdentifier}`);
+	console.log(`Database setup started.`);
 
 	const newSequelizeInstance = new Sequelize({
 		...dbCredentials,
-		// database: 'postgres',
-		// username: 'postgres',
-		// password: token,
-		// password: 'S#8M4!c&5zYs',
-		// host: host,
-		// host: 'teamsheet-db-proxy.proxy-c3txzw57ocdq.eu-west-2.rds.amazonaws.com',
-		// host: 'teamsheet-db.c3txzw57ocdq.eu-west-2.rds.amazonaws.com',
 		port: 5432,
 		dialect: 'postgres',
 
@@ -104,14 +93,54 @@ async function loadSequelize() {
 
 	await newSequelizeInstance.authenticate();
 
-	console.log('Got here');
+	// console.log(`Database setup started.`);
+
+	// const tables: Tables = {} as Tables;
+	// const models = await Promise.all(
+	// 	findFilesInDir('.', '.model.ts')
+	// 		.filter((file) => file !== 'src/lib/base.model.ts')
+	// 		.map(async (file) => {
+	// 			return (await import(`../../${file}`)).default;
+	// 		}),
+	// );
+	// models.forEach((model) => {
+	// 	tables[model.model.name] = model;
+	// 	model.associate?.();
+	// 	model.addScopes?.(tables);
+	// });
+
+	// db.tables = tables;
+	// Logger.info('Setup completed.', 'Sequelize');
 
 	return newSequelizeInstance;
 }
 
+function setupModels() {
+	User.initModel(sequelizeInstance);
+}
+
+const findFilesInDir = (startPath: string, filter: string) => {
+	let results: string[] = [];
+	if (!fs.existsSync(startPath)) {
+		return results;
+	}
+	const files = fs.readdirSync(startPath);
+	for (let i = 0; i < files.length; i++) {
+		const filename = path.join(startPath, files[i]);
+		const stat = fs.lstatSync(filename);
+		if (stat.isDirectory()) {
+			results = results.concat(findFilesInDir(filename, filter)); // recurse
+		} else if (filename.indexOf(filter) >= 0) {
+			results.push(filename);
+		}
+	}
+	return results;
+};
+
 export async function getSequelizeInstance() {
 	if (!sequelizeInstance) {
 		sequelizeInstance = await loadSequelize();
+		setupModels();
 	} else {
 		// restart connection pool to ensure connections are not re-used across invocations
 		sequelizeInstance.connectionManager.initPools();
