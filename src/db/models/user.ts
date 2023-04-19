@@ -1,11 +1,13 @@
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, InitOptions } from 'sequelize';
+import { Association, CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, InitOptions, NonAttribute } from 'sequelize';
 import { Base } from './base';
+import { Match } from './match';
 
 export class User extends Base<InferAttributes<User>, InferCreationAttributes<User>> {
 	// id can be undefined during creation when using `autoIncrement`
 	declare id: CreationOptional<number>;
 	declare firstName: string;
 	declare lastName: string;
+	declare matches?: NonAttribute<Match[]>;
 
 	static get modelFields() {
 		return {
@@ -31,23 +33,16 @@ export class User extends Base<InferAttributes<User>, InferCreationAttributes<Us
 			...super.modelOptions,
 		};
 	}
+
+	static associate(): void {
+		User.hasMany(Match, {
+			sourceKey: 'id',
+			foreignKey: 'user_id',
+			as: 'matches', // this determines the name in `associations`!
+		});
+	}
+
+	declare static associations: {
+		matches: Association<User, Match>;
+	};
 }
-
-// import { Model, InferAttributes, InferCreationAttributes, DataTypes, ForeignKey } from 'sequelize';
-
-// class Project extends Model<InferAttributes<Project>, InferCreationAttributes<Project>> {
-//   id: number;
-//   userId: ForeignKey<number>;
-// }
-
-// // this configures the `userId` attribute.
-// Project.belongsTo(User);
-
-// // therefore, `userId` doesn't need to be specified here.
-// Project.init({
-//   id: {
-//     type: DataTypes.INTEGER,
-//     primaryKey: true,
-//     autoIncrement: true,
-//   },
-// }, { sequelize });

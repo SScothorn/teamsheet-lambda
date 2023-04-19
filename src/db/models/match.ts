@@ -1,11 +1,13 @@
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, InitOptions } from 'sequelize';
+import { CreationOptional, DataTypes, ForeignKey, InferAttributes, InferCreationAttributes, InitOptions } from 'sequelize';
 import { Base } from './base';
 import { User } from './user';
 
-export class Matches extends Base<InferAttributes<Matches>, InferCreationAttributes<Matches>> {
+export class Match extends Base<InferAttributes<Match>, InferCreationAttributes<Match>> {
 	// id can be undefined during creation when using `autoIncrement`
 	declare id: CreationOptional<number>;
 	declare name: string;
+	declare date: Date;
+	declare userId: ForeignKey<User['id']>;
 
 	static get modelFields() {
 		return {
@@ -31,7 +33,8 @@ export class Matches extends Base<InferAttributes<Matches>, InferCreationAttribu
 			...super.modelOptions,
 		};
 	}
-}
 
-// // this configures the `user_id` attribute.
-Matches.belongsTo(User);
+	static associate(): void {
+		Match.belongsTo(User, { targetKey: 'id' });
+	}
+}

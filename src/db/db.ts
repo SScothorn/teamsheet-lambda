@@ -3,7 +3,7 @@ import path from 'path';
 import { Options, Sequelize } from 'sequelize';
 import fs from 'fs';
 import { User } from './models/user';
-import { Matches } from './models/matches';
+import { Match } from './models/match';
 
 let sequelizeInstance: Sequelize;
 
@@ -118,7 +118,9 @@ async function loadSequelize() {
 
 function setupModels() {
 	User.initModel(sequelizeInstance);
-	Matches.initModel(sequelizeInstance);
+	Match.initModel(sequelizeInstance);
+	User.associate();
+	Match.associate();
 }
 
 const findFilesInDir = (startPath: string, filter: string) => {

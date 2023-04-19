@@ -29,4 +29,8 @@ export abstract class Base<TModelAttributes extends {} = any, TCreationAttribute
 		const options = { ...this.modelOptions, sequelize };
 		return super.init(this.modelFields, options);
 	}
+
+	static associate() {
+		// Extent
+	}
 }
