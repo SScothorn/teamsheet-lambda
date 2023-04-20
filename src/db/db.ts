@@ -151,7 +151,8 @@ export async function getSequelizeInstance() {
 
 		// restore `getConnection()` if it has been overwritten by `close()`
 		if (sequelizeInstance.connectionManager.hasOwnProperty('getConnection')) {
-			delete sequelizeInstance.connectionManager.getConnection;
+			// Use as any because despite being recommended in the docs, deleting getConnection throws an error
+			delete (sequelizeInstance as any).connectionManager.getConnection;
 		}
 	}
 	return sequelizeInstance;

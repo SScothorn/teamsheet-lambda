@@ -8,8 +8,9 @@ jspm_packages
 # esbuild directories
 .esbuild
 
-# build directory
+# build directorys
 .build
+js-build
 
 .lib
 lib

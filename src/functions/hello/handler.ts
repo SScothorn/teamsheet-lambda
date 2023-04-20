@@ -1,5 +1,4 @@
 import { User } from '../../db/models/user';
-import { Match } from '../../db/models/match';
 import { getSequelizeInstance } from '../../db/db';
 import { ValidatedEventAPIGatewayProxyEvent, formatJSONResponse } from '../../libs/api-gateway';
 import { middyfy } from '../../libs/lambda';
