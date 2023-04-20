@@ -10,7 +10,7 @@ const serverlessConfiguration: AWS = {
 			role: 'arn:aws:iam::733043447271:role/lambda-vpc-role',
 		},
 		name: 'aws',
-		runtime: 'nodejs16.x',
+		runtime: 'nodejs14.x',
 		region: 'eu-west-2',
 		apiGateway: {
 			minimumCompressionSize: 1024,
