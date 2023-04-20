@@ -6,7 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "local-invoke": "serverless invoke local --function hello  --path './src/functions/hello/mock.json'",
-    "start": "sls offline --noPrependStageInUrl --reloadHandler -s dev"
+    "start": "sls offline --noPrependStageInUrl --reloadHandler -s dev",
+	"migrate": "npx sequelize-cli db:migrate",
+	"undo-migrate": "npx sequelize-cli db:migrate:undo:all",
+	"seed": "npx sequelize-cli db:seed:all",
+	"undo-seed": "npx sequelize-cli db:seed:undo:all"
   },
   "engines": {
     "node": ">=14.15.0"
