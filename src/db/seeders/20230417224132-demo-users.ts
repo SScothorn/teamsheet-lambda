@@ -5,7 +5,7 @@ import { QueryInterface } from 'sequelize';
 module.exports = {
 	up: (queryInterface: QueryInterface): Promise<void> =>
 		queryInterface.sequelize.transaction(async (transaction) => {
-			// here go all migration changes
+			// here go all seed changes
 			await queryInterface.bulkInsert(
 				'users',
 				[
@@ -34,7 +34,7 @@ module.exports = {
 
 	down: (queryInterface: QueryInterface): Promise<void> =>
 		queryInterface.sequelize.transaction(async (transaction) => {
-			// here go all migration undo changes
+			// here go all seed undo changes
 			await queryInterface.bulkDelete('users', {}, { transaction });
 		}),
 };

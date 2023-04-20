@@ -5,7 +5,7 @@ import { QueryInterface } from 'sequelize';
 module.exports = {
 	up: (queryInterface: QueryInterface): Promise<void> =>
 		queryInterface.sequelize.transaction(async (transaction) => {
-			// here go all migration changes
+			// here go all seed changes
 			const users: Partial<User>[] = (await queryInterface.sequelize.query(`SELECT id from users;`))[0] as Partial<User>[];
 			console.log(users);
 
@@ -26,7 +26,7 @@ module.exports = {
 
 	down: (queryInterface: QueryInterface): Promise<void> =>
 		queryInterface.sequelize.transaction(async (transaction) => {
-			// here go all migration undo changes
+			// here go all seed undo changes
 			await queryInterface.bulkDelete('matches', {}, { transaction });
 		}),
 };
