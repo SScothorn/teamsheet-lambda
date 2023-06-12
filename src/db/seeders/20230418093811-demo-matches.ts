@@ -1,12 +1,12 @@
 'use strict';
-import { User } from 'db/models/user';
+import { UserModel } from 'db/models/user.model';
 import { QueryInterface } from 'sequelize';
 
 module.exports = {
 	up: (queryInterface: QueryInterface): Promise<void> =>
 		queryInterface.sequelize.transaction(async (transaction) => {
 			// here go all seed changes
-			const users: Partial<User>[] = (await queryInterface.sequelize.query(`SELECT id from users;`))[0] as Partial<User>[];
+			const users: Partial<UserModel>[] = (await queryInterface.sequelize.query(`SELECT id from users;`))[0] as Partial<UserModel>[];
 			console.log(users);
 
 			const matches = users.map((user, i) => {

@@ -1,4 +1,4 @@
-import { User } from '../../db/models/user';
+import { UserModel } from '../../db/models/user.model';
 import { getSequelizeInstance } from '../../db/db';
 import { ValidatedEventAPIGatewayProxyEvent, formatJSONResponse } from '../../libs/api-gateway';
 import { middyfy } from '../../libs/lambda';
@@ -7,7 +7,7 @@ import schema from './schema';
 const hello: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
 	const sequelizeInstance = await getSequelizeInstance();
 
-	const users = await User.findAll({ include: 'matches' });
+	const users = await UserModel.findAll({ include: 'matches' });
 
 	users.map(async (user) => {
 		console.log(`My name is ${user.firstName} ${user.lastName}`);

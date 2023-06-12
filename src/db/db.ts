@@ -2,8 +2,8 @@ import { Signer } from '@aws-sdk/rds-signer';
 import path from 'path';
 import { Options, Sequelize } from 'sequelize';
 import fs from 'fs';
-import { User } from './models/user';
-import { Match } from './models/match';
+import { User } from './models/user.model';
+import { Match } from './models/match.model';
 
 let sequelizeInstance: Sequelize;
 
